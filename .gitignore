@@ -39,5 +39,5 @@ build/
 .DS_Store
 
 ### log ###
-**/log/**/error
-**/log/**/info
+**/log/**/error/
+**/log/**/info/
