@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--包组件扫描-->
+    <context:component-scan base-package="com.sshen.spring6.xmltx"></context:component-scan>
+
+    <!-- 导入外部文件 -->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+    <!-- 配置数据库连接 -->
+    <bean id="druidDateSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="username" value="${jdbc.user}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!-- 配置JdbcTemplate -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="druidDateSource"></property>
+    </bean>
+
+    <!-- 注册事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="druidDateSource"></property>
+    </bean>
+
+    <!-- 配置事务增强 -->
+    <tx:advice id="transactionInterceptor" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <!-- 置灰的为默认值，可以忽略 -->
+            <tx:method name="update*" read-only="false" propagation="REQUIRED"/>
+            <tx:method name="bug*" read-only="false" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置aop -->
+    <aop:config>
+        <!-- 配置切入点 -->
+        <!-- service层的所有类及类中的所有方法 -->
+        <aop:pointcut id="pointcut" expression="execution(* com.sshen.spring6.xmltx.service.*.*(..))"/>
+        <!--
+            作用：将一个通知（Advice） 与 一个切入点（Pointcut） 绑定，形成一个完整的切面逻辑。
+            适用场景：
+                使用 Spring 内置的通知（如事务管理的 TransactionInterceptor）。
+                需要将现成的 Advice 快速应用到某个切入点。
+            特点：
+                一个 <aop:advisor> 只能关联一个 Advice 和一个 Pointcut。
+                通常用于非自定义的 Advice（如声明式事务）。
+            -->
+        <aop:advisor advice-ref="transactionInterceptor" pointcut-ref="pointcut"/>
+    </aop:config>
+
+</beans>

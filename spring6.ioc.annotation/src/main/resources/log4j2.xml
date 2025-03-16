@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- log4j2 本身日志级别，5秒重新加载配置文件-->
+<Configuration status="WARN" monitorInterval="5">
+    <Properties>
+        <!-- all级别日志 -->
+        <Property name="LOG_ALL_LEVEL" value="ALL"/>
+        <!-- debug级别日志 -->
+        <Property name="LOG_DEBUG_LEVEL" value="DEBUG"/>
+        <!-- info级别日志 -->
+        <Property name="LOG_INFO_LEVEL" value="INFO"/>
+        <!-- error级别日志 -->
+        <Property name="LOG_ERROR_LEVEL" value="ERROR"/>
+        <!-- 在当前目录下创建log目录做日志存放的目录 -->
+        <Property name="LOG_HOME" value="./log"/>
+        <!-- 档案日志存放目录 -->
+        <Property name="LOG_ARCHIVE" value="${LOG_HOME}/archive"/>
+        <!-- 模块名称， 影响日志配置名，日志文件名，根据自己项目进行配置 -->
+        <Property name="LOG_MODULE_NAME" value="spring-first"/>
+        <!-- 日志文件大小，超过这个大小将被压缩 -->
+        <Property name="LOG_MAX_SIZE" value="10MB"/>
+        <!-- 保留一个时间段内的日志文件个数（一小时、一天） -->
+        <Property name="LOG_DAYS" value="15"/>
+        <!-- 输出日志的格式:%d表示日期;%thread表示线程名 -->
+        <!-- %l:包括类全名、方法、文件名以及在代码中的行数 -->
+        <!-- %-5level:级别从左显示5个字符宽度;%msg:日志消息;%n是换行符 -->
+        <Property name="LOG_PATTERN"
+                  value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] %-5level %l - %msg%n"/>
+        <!--interval属性用来指定多久滚动一次-->
+        <Property name="TIME_BASED_INTERVAL" value="1"/>
+    </Properties>
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!-- 输出日志的格式 -->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <!-- 输出info级别以上的日志,每次大小超过size -->
+        <!-- 或者满足TimeBasedTriggeringPolicy -->
+        <!-- 则日志会自动存入按年月日建立的文件夹下面并进行压缩，作为存档 -->
+        <!-- 异步日志会自动批量刷新，所以将immediateFlush属性设置为false -->
+        <RollingRandomAccessFile name="RollingRandomAccessFileInfo"
+                                 fileName="${LOG_HOME}/${LOG_MODULE_NAME}/info/infoLog.log"
+                                 immediateFlush="false"
+                                 append="true"
+                                 filePattern="${LOG_ARCHIVE}/${LOG_MODULE_NAME}/info/infoLog-%d{yyyy-MM-dd}-%i.log.gz">
+            <Filters>
+                <!-- 记录info级别以上的日志 -->
+                <ThresholdFilter level="${LOG_INFO_LEVEL}" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!-- interval属性用来指定多久滚动一次，根据当前filePattern设置是1天滚动一次  -->
+                <TimeBasedTriggeringPolicy interval="${TIME_BASED_INTERVAL}"/>
+                <!-- 文件大小超过10MB滚动一次 -->
+                <SizeBasedTriggeringPolicy size="${LOG_MAX_SIZE}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认同一天内最多保存7个归档日志文件-->
+            <DefaultRolloverStrategy max="${LOG_DAYS}"/>
+        </RollingRandomAccessFile>
+        <!-- 记录error级别以上的日志，实现error日志双打印，可以根据error日志的上下文快速定位bug位置 -->
+        <RollingRandomAccessFile name="RollingRandomAccessFileError"
+                                 fileName="${LOG_HOME}/${LOG_MODULE_NAME}/error/errorLog.log"
+                                 immediateFlush="false"
+                                 append="true"
+                                 filePattern="${LOG_ARCHIVE}/${LOG_MODULE_NAME}/error/errorLog-%d{yyyy-MM}-%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="${LOG_ERROR_LEVEL}" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <!-- 根据当前filePattern设置，每月滚动一次 -->
+                <SizeBasedTriggeringPolicy size="${LOG_MAX_SIZE}"/>
+            </Policies>
+            <!-- 一个月内保存15个归档日志文件 -->
+            <DefaultRolloverStrategy max="${LOG_DAYS}"/>
+        </RollingRandomAccessFile>
+
+    </Appenders>
+    <Loggers>
+        <!-- 指定类的打印级别， additivity="false" 保证该类（该包）日志只会打印一次（root不会再次打印）-->
+        <!-- "指定的类"是值Logger.getLogger(A.class)中的A类，可以使用 %c 的 -->
+<!--        <Logger name="org.apache.xxx" level="${LOG_INFO_LEVEL}" includeLocation="true" additivity="false">-->
+<!--            <AppenderRef ref="STDOUT"/>-->
+<!--        </Logger>-->
+
+        <!-- 开发环境使用 -->
+        <!-- 同步日志 -->
+        <Root level="${LOG_DEBUG_LEVEL}" includeLocation="true">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+
+        <!-- 测试，生产环境使用 -->
+        <!-- 同步日志 -->
+<!--        <Root level="${LOG_INFO_LEVEL}" includeLocation="true">-->
+<!--            <AppenderRef ref="RollingRandomAccessFileInfo"/>-->
+<!--            <AppenderRef ref="RollingRandomAccessFileError"/>-->
+<!--        </Root>-->
+
+    </Loggers>
+</Configuration>

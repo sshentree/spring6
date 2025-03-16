@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="teacherMath" class="com.sshen.spring6.dimap.Teacher">
+        <property name="tid" value="T98789"/>
+        <property name="tname" value="李老师"/>
+    </bean>
+
+    <bean id="teacherChinese" class="com.sshen.spring6.dimap.Teacher">
+        <property name="tid" value="T09876"/>
+        <property name="tname" value="许老师"/>
+    </bean>
+
+    <bean id="student" class="com.sshen.spring6.dimap.Student">
+        <property name="sid" value="S008897"/>
+        <property name="sname" value="张三"/>
+        <property name="teacherMap">
+            <map>
+                <entry key="数学老师" value-ref="teacherMath"/>
+                <entry>
+                    <key>
+                        <value>语文老师</value>
+                    </key>
+                    <ref bean="teacherChinese"></ref>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

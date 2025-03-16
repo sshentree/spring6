@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="student" class="com.sshen.spring6.dimap.Student">
+        <property name="sid" value="S008897"/>
+        <property name="sname" value="张三"/>
+        <property name="lessons" ref="lessons"/>
+        <property name="teacherMap" ref="teacherMap"/>
+    </bean>
+
+    <bean id="student2" class="com.sshen.spring6.dimap.Student" p:sid="10293"></bean>
+    <bean id="student3" class="com.sshen.spring6.dimap.Student" c:sid="102938"></bean>
+
+    <util:list id="lessons">
+        <ref bean="lessMath"/>
+        <ref bean="lessChinese"/>
+    </util:list>
+
+    <util:map id="teacherMap">
+        <entry key="chinese" value-ref="teacherChinese"/>
+        <entry key="math" value-ref="teacherMath"/>
+    </util:map>
+
+    <bean id="lessMath" class="com.sshen.spring6.dimap.Lesson">
+        <property name="lname" value="数学"/>
+    </bean>
+
+    <bean id="lessChinese" class="com.sshen.spring6.dimap.Lesson">
+        <property name="lname" value="语文"/>
+    </bean>
+
+    <bean id="teacherMath" class="com.sshen.spring6.dimap.Teacher">
+        <property name="tid" value="T98789"/>
+        <property name="tname" value="李老师"/>
+    </bean>
+
+    <bean id="teacherChinese" class="com.sshen.spring6.dimap.Teacher">
+        <property name="tid" value="T09876"/>
+        <property name="tname" value="许老师"/>
+    </bean>
+</beans>

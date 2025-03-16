@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="emp1" class="com.sshen.spring6.ditest.Emp">
+        <property name="name" value="张三"/>
+        <property name="age" value="23"/>
+        <!-- 外部bean -->
+        <property name="dept" ref="dept"/>
+        <!-- 外联 -->
+        <property name="dept.name" value="测试部"/>
+        <!-- 数字 -->
+        <property name="loves">
+            <array>
+                <value>吃饭</value>
+                <value>睡觉</value>
+                <value>看电影</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="emp2" class="com.sshen.spring6.ditest.Emp">
+        <property name="name" value="李四"/>
+        <property name="age" value="27"/>
+        <!-- 外部bean -->
+        <property name="dept" ref="dept"/>
+        <!-- 外联 -->
+        <property name="dept.name" value="测试部"/>
+        <!-- 数字 -->
+        <property name="loves">
+            <array>
+                <value>打篮球</value>
+                <value>睡觉</value>
+                <value>吃饭</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="dept" class="com.sshen.spring6.ditest.Dept">
+        <property name="name" value="运营部"/>
+        <property name="emps">
+            <list>
+                <ref bean="emp1"></ref>
+                <ref bean="emp2"></ref>
+            </list>
+        </property>
+    </bean>
+</beans>

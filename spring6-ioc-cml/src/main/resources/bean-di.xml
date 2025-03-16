@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--  setter注入  -->
+    <bean id="book" class="com.sshen.spring6.di.Book">
+        <property name="name" value="啊" />
+        <property name="author" value="大兵" />
+<!--        <property name="other">-->
+<!--            <null/>-->
+<!--        </property>-->
+
+<!--        <property name="other" value="&lt;&gt;" />-->
+
+            <property name="other">
+                <value><![CDATA[<<>>]]></value>
+            </property>
+    </bean>
+
+    <!-- 构造器注入（有参构造器） -->
+    <bean id="bookCon" class="com.sshen.spring6.di.Book">
+        <constructor-arg name="name" value="三国演义" />
+        <constructor-arg index="1" value="罗贯中" />
+        <constructor-arg name="other">
+            <null/>
+        </constructor-arg>
+    </bean>
+</beans>
