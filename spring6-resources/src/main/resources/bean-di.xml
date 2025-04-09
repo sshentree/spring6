@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    为什么不需要 ref 或特殊配置？
+
+    Spring 默认支持将字符串路径隐式转换为 Resource 对象，无需额外配置。其内部机制如下：
+        当检测到属性类型为 Resource 时，Spring 会调用 ResourceLoader（通常是 ApplicationContext）的 getResource() 方法。
+        根据路径前缀（如 classpath:）自动选择资源加载策略。
+
+    可以赋值：
+        当 resource 属性类型为 Resource 时，直接通过 value="classpath:log4j2.xml" 注入是合法的。
+        原理：Spring 自动将字符串路径转换为 Resource 对象，依赖 ResourceLoader 实现。
+    -->
+    <bean id="ResourceDemo" class="com.sshen.spring6.di.ResourceDemo">
+        <property name="resource" value="classpath:log4j2.xml"></property>
+    </bean>
+</beans>

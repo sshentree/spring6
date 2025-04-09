@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- messageSource 是固定写法，不可以改变 -->
+    <!--
+        当在Spring中配置了messageSource的bean，Spring容器会自动识别这个bean作为消息源。
+        因为Spring规定，messageSource这个名称的bean会被特别处理，作为消息资源的基础。
+        所以当用户正确配置后，ApplicationContext在解析消息时会自动使用这个bean。
+
+        当调用 ApplicationContext 的 getMessage() 方法时，底层会委托给 messageSource Bean 处理：
+            ApplicationContext 接口本身直接继承了 MessageSource 接口：
+            这意味着 ApplicationContext 的实现类（如 ClassPathXmlApplicationContext）必须实现 getMessage() 方法。
+            但实际的消息解析逻辑并非由 ApplicationContext 直接处理，而是通过 委派 给内部的 messageSource Bean。
+
+         ApplicationContext 的实现类（如 AbstractApplicationContext）内部维护了一个 MessageSource 实例，默认情况下，该实例即为配置的 messageSource Bean。
+         当调用 ApplicationContext.getMessage() 时，请求会直接转发给这个内部的 messageSource 实例。
+     -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <value>message</value>
+        </property>
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
+</beans>

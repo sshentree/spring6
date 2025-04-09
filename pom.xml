@@ -19,6 +19,8 @@
     <module>spring6-junit5</module>
     <module>spring-jdbc-tx</module>
       <module>spring6-resources</module>
+      <module>spring6-i18n</module>
+      <module>spring6-validation</module>
   </modules>
 
   <properties>

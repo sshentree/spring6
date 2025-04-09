@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+        3. 对比：Resource 类型与 String 类型的区别
+            属性类型	注入值	Spring 行为	后续使用风险
+            Resource	value="classpath:log4j2.xml"	Spring 自动转换为 Resource 对象	无风险，可直接操作资源
+            String	value="classpath:log4j2.xml"	直接注入字符串	需手动加载资源，路径错误时延迟报错
+    -->
+    <bean id="ResourceDemo1" class="com.sshen.spring6.di.ResourceDemo1">
+        <property name="resource" value="classpath:log4j2.xml"></property>
+    </bean>
+</beans>
